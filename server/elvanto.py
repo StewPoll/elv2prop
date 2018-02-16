@@ -5,6 +5,14 @@ from datetime import timedelta as td
 import requests
 
 
+class ElvantoAPIError(Exception):
+    pass
+
+
+class ElvantoNoServicesError(Exception):
+    pass
+
+
 def flatten_songs(s):
     if type(s['songs']) is not list:
         s['songs'] = s['songs']['song']
@@ -31,9 +39,9 @@ def get_services(token):
 
     data = r.json()
     if data['status'] != 'ok':
-        raise
+        raise ElvantoAPIError
 
     if data['services']:
         return data['services']['service']
     else:
-        raise
+        raise ElvantoNoServicesError
